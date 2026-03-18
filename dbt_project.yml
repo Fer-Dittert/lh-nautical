@@ -10,9 +10,12 @@ models:
   lh_nautical_dbt:
     staging:
       +materialized: view
+      +schema: 03_silver
 
     intermediate:
       +materialized: view
+      +schema: 03_silver
 
     marts:
       +materialized: table
+      +schema: 04_gold
