@@ -107,24 +107,27 @@ final as (
         cf.product_id,
         cf.quantity,
         cf.sale_date,
-        cf.total_amount as receita_transacao_brl,
+
+        cast(cf.total_amount as decimal(18,2)) as receita_transacao_brl,
 
         cf.cost_start_date,
-        cf.usd_price,
+        cast(cf.usd_price as decimal(18,2)) as usd_price,
+
         cfx.exchange_date as exchange_rate_date,
-        cfx.exchange_rate,
+        cast(cfx.exchange_rate as decimal(18,6)) as exchange_rate,
 
-        -- custo unitário convertido para BRL
-        (cf.usd_price * cfx.exchange_rate) as custo_unitario_brl,
+        cast((cf.usd_price * cfx.exchange_rate) as decimal(18,2)) as custo_unitario_brl,
 
-        -- custo total da transação em BRL
-        (cf.usd_price * cfx.exchange_rate * cf.quantity) as custo_total_brl,
+        cast((cf.usd_price * cfx.exchange_rate * cf.quantity) as decimal(18,2)) as custo_total_brl,
 
-        case
-            when (cf.usd_price * cfx.exchange_rate * cf.quantity) > cf.total_amount
-                then (cf.usd_price * cfx.exchange_rate * cf.quantity) - cf.total_amount
-            else 0
-        end as prejuizo_brl,
+        cast(
+            case
+                when (cf.usd_price * cfx.exchange_rate * cf.quantity) > cf.total_amount
+                    then (cf.usd_price * cfx.exchange_rate * cf.quantity) - cf.total_amount
+                else 0
+            end
+            as decimal(18,2)
+        ) as prejuizo_brl,
 
         case
             when (cf.usd_price * cfx.exchange_rate * cf.quantity) > cf.total_amount
