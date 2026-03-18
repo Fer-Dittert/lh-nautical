@@ -1,1 +1,27 @@
 name: 'lh_nautical_dbt'
+version: '1.0.0'
+config-version: 2
+
+profile: 'lh_nautical_profile'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  lh_nautical_dbt:
+    staging:
+      +materialized: view
+      +schema: 03_silver
+
+    intermediate:
+      +materialized: view
+      +schema: 03_silver
+
+    marts:
+      +materialized: table
+      +schema: 04_gold
