@@ -1,0 +1,21 @@
+name: 'lh_nautical_dbt'
+version: '1.0.0'
+config-version: 2
+
+profile: 'default'
+
+model-paths: ["models"]
+
+models:
+  lh_nautical_dbt:
+    staging:
+      +materialized: view
+      +schema: 03_silver
+
+    intermediate:
+      +materialized: view
+      +schema: 03_silver
+
+    marts:
+      +materialized: table
+      +schema: 04_gold
