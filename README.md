@@ -2,56 +2,29 @@
 
 ## 📌 Visão Geral
 
-Este projeto foi desenvolvido com foco em Analytics Engineering, com o objetivo de estruturar um pipeline completo de dados capaz de transformar dados brutos em informações confiáveis para análise e tomada de decisão.
+Projeto de Analytics Engineering desenvolvido para estruturar um pipeline de dados completo, transformando dados brutos em informações confiáveis para tomada de decisão.
 
-O projeto simula um cenário real da empresa LH Nautical, que enfrentava problemas de qualidade de dados e tomava decisões baseadas em “feeling”.
+O cenário simula a empresa LH Nautical, que enfrentava problemas de qualidade de dados e decisões baseadas em "feeling".
 
 ---
 
-## 🧱 Arquitetura do Projeto
+## 🧱 Arquitetura
 
 ![Arquitetura](./imagens/arquitetura.jpg)
 
-O pipeline foi construído utilizando o conceito de Data Lakehouse com arquitetura Medallion (Raw, Bronze, Silver e Gold).
+Pipeline estruturado com arquitetura Medallion:
 
-### Tecnologias utilizadas
+- **Raw** → ingestão de dados (CSV e JSON)  
+- **Bronze** → limpeza e padronização  
+- **Silver** → tratamento e validação  
+- **Gold** → modelagem analítica e regras de negócio  
 
-- Databricks (Delta Lake) — processamento e armazenamento  
-- dbt — transformação e modelagem analítica  
-- AWS S3 (conceitual) — camada Raw  
-- Power BI — visualização  
-- GitHub — versionamento  
-
----
-
-## 🔄 Fluxo de Dados
-
-### 1. Raw
-- Ingestão de arquivos CSV e JSON  
-- Dados armazenados sem transformação  
-
-### 2. Bronze
-- Limpeza técnica  
-- Padronização de colunas e tipos  
-- Normalização de JSON  
-- Remoção de duplicidades  
-
-### 3. Silver
-- Tratamento de dados inválidos  
-- Padronização de textos  
-- Deduplicação  
-- Aplicação de regras técnicas  
-
-### 4. Gold
-- Modelo dimensional (Star Schema)  
-- Criação de tabelas fato e dimensões  
-- Aplicação de regras de negócio (custo, prejuízo, câmbio)  
+**Stack:**
+Databricks (Delta Lake) • dbt • AWS S3 (conceitual) • Power BI • GitHub
 
 ---
 
 ## 📊 Modelo de Dados
-
-### Fato
 
 ### Fato
 
@@ -62,11 +35,9 @@ O pipeline foi construído utilizando o conceito de Data Lakehouse com arquitetu
   - product_id  
   - sale_date  
   - quantity  
-
   - receita_transacao_brl  
   - custo_unitario_brl  
   - custo_total_brl  
-
   - prejuizo_brl  
   - teve_prejuizo  
 
@@ -76,7 +47,7 @@ O pipeline foi construído utilizando o conceito de Data Lakehouse com arquitetu
 - dim_produto  
 - dim_data  
 
-### Marts analíticos
+### Marts
 
 - fct_prejuizo_produto  
 - mart_clientes_fieis  
@@ -84,81 +55,71 @@ O pipeline foi construído utilizando o conceito de Data Lakehouse com arquitetu
 
 ---
 
-## 📊 Insights de Negócio
+## 📊 Principais Insights
 
-### 🧹 Inconsistência de categorias distorce análises
+### 💸 Prejuízo por falha de precificação
 
-Durante a normalização dos produtos, foram identificadas diversas variações:
+Produtos estavam sendo vendidos abaixo do custo real.
+
+Cálculo baseado em:
+- preço de venda (BRL)  
+- custo histórico (USD)  
+- câmbio da data da venda  
+
+Regra aplicada:
+- **última cotação válida anterior à venda**
+
+**Impacto:**
+- identificação de prejuízo real  
+- evidência de falha operacional  
+- suporte à tomada de decisão  
+
+---
+
+### 🧹 Inconsistência de categorias
+
+Foram identificadas variações como:
 
 - Eletrunicos, Eletronicoz, E L E T R Ô N I C O S  
 - Prop, Propulçao, Propução  
 
-Após tratamento, as categorias foram consolidadas corretamente em:
+Após padronização:
 
 - eletrônicos  
 - propulsão  
 - ancoragem  
 
-**Impacto:** garantiu consistência analítica e viabilizou análises confiáveis de comportamento de compra.
+**Impacto:** garantiu consistência nas análises e evitou distorções.
 
 ---
 
-### 💸 Prejuízo real por falha de precificação
+### 📅 Viés por ausência de dados
 
-Foi identificado que produtos estavam sendo vendidos abaixo do custo real.
+Dias sem vendas não estavam sendo considerados, gerando médias infladas.
 
-O cálculo considerou:
-
-- preço de venda (BRL)  
-- custo histórico (USD)  
-- câmbio da data da venda  
-
-Como o câmbio não cobre todos os dias, foi aplicada a regra de:
-
-**última cotação válida anterior à data da venda**
-
-**Impacto:**
-
-- identificação de prejuízo real  
-- evidência de falha de precificação  
-- suporte direto à tomada de decisão  
-
----
-
-### 📅 Dias sem venda distorcem análises
-
-A análise mostrou que considerar apenas dias com vendas gera médias infladas.
-
-**Solução aplicada:**
-
+**Solução:**
 - criação de dimensão de datas  
 - inclusão de dias com venda = 0  
 
-**Impacto:** correção da análise de desempenho por dia da semana.
-
 ---
 
-### 🧠 Limitações do modelo de recomendação
+### 🧠 Limitação do modelo de recomendação
 
 O modelo baseado em coocorrência:
-
-- identifica padrões de compra  
-- mas não considera contexto adicional  
-
-Limitações:
 
 - não considera ordem temporal  
 - não considera quantidade  
 - não considera perfil do cliente  
-- baixa confiabilidade para produtos com poucas compras  
+
+👉 Funciona como baseline, mas limitado para produção.
 
 ---
 
 ## 📊 Dashboard
 
-O projeto inclui um dashboard em Power BI com:
-
 ![Visão Geral](./imagens/lh_1.png)
+
+Principais análises:
 
 - Receita ao longo do tempo  
 - Ticket médio  
@@ -169,27 +130,24 @@ O projeto inclui um dashboard em Power BI com:
 
 ### 💸 Análise de Prejuízo
 
-![Visão Prejuízo](./imagens/lh_2.png)
+![Prejuízo](./imagens/lh_2.png)
 
-Essa visão evidencia os principais problemas de precificação, permitindo identificar produtos com maior impacto financeiro negativo, tanto em valor absoluto quanto proporcional.
+Identificação de produtos com maior impacto financeiro negativo, tanto em valor absoluto quanto proporcional.
 
 ---
 
 ## 🧪 Notebooks
-
-Os notebooks seguem a evolução do projeto:
 
 - Ingestão de dados  
 - Transformações (Bronze)  
 - Integração com API de câmbio  
 - Cálculo de custos e prejuízo  
 - Análises exploratórias  
-- Resolução das questões de negócio  
 
 ---
 
 ## 📁 Estrutura do Projeto
-## 📁 Estrutura do Projeto
+
 
 ```
 📦 projeto
@@ -204,10 +162,19 @@ Os notebooks seguem a evolução do projeto:
 
 ---
 
+
+---
+
 ## 🚀 Conclusão
 
-O projeto resultou na construção de um pipeline completo, escalável e confiável, capaz de sustentar análises estratégicas e evoluções futuras como:
+O projeto resultou em um pipeline completo, confiável e escalável, permitindo:
+
+- identificação de prejuízo real por produto  
+- análises consistentes de vendas  
+- suporte a decisões estratégicas  
+
+E abre caminho para evoluções como:
 
 - previsão de demanda  
 - recomendação de produtos  
-- análises gerenciais avançadas  
+- análises avançadas  
