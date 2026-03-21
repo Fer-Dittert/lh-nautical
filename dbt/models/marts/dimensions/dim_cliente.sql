@@ -1,5 +1,5 @@
 select
-    customer_id as id_cliente,
+    customer_id,
     customer_name,
     email,
     location
