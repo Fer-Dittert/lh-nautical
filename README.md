@@ -189,6 +189,9 @@ Os notebooks seguem a evolução do projeto:
 ---
 
 ## 📁 Estrutura do Projeto
+## 📁 Estrutura do Projeto
+
+```
 📦 projeto
  ┣ 📂 dbt/           # Transformações e modelagem
  ┣ 📂 notebooks/     # Análises e etapas exploratórias
@@ -196,6 +199,7 @@ Os notebooks seguem a evolução do projeto:
  ┣ 📂 docs/          # Documentação e relatórios
  ┣ 📂 powerbi/       # Dashboard
  ┗ 📂 imagens/       # Imagens utilizadas no README
+```
 
 
 ---
