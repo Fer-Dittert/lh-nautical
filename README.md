@@ -53,11 +53,22 @@ O pipeline foi construído utilizando o conceito de Data Lakehouse com arquitetu
 
 ### Fato
 
-- **fct_vendas**
-  - Receita  
-  - Custo  
-  - Prejuízo  
-  - Indicador de prejuízo  
+### Fato
+
+- **fct_vendas** (grão: 1 linha por venda)
+
+  - sale_id  
+  - customer_id  
+  - product_id  
+  - sale_date  
+  - quantity  
+
+  - receita_transacao_brl  
+  - custo_unitario_brl  
+  - custo_total_brl  
+
+  - prejuizo_brl  
+  - teve_prejuizo  
 
 ### Dimensões
 
